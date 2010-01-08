@@ -18,8 +18,7 @@ HEADERS = \
 
 SOURCES = \
 	checkpassword_pg.c \
-	cli.c \
-	log.c
+	cli.c
 
 OBJECTS = ${SOURCES:.c=.o}
 
