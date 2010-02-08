@@ -43,7 +43,7 @@ dist:
 CLEANFILES = *.o checkpassword-pg
 CLEANFILES_ = $(wildcard ${CLEANFILES})
 clean:
-	test -z ${CLEANFILES_} || rm -f ${CLEANFILES}
+	test -z "${CLEANFILES_}" || rm -f ${CLEANFILES}
 
 ##  build
 
