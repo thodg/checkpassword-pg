@@ -1,6 +1,6 @@
 
 #define CHKPW_PG_CONNINFO \
-  "dbname='courier' user='courier' password='2R34lar.asd3r2.9/[qASwd'"
+  "host='127.0.0.1' port='5432' dbname='courier' user='courier' password='changeme'"
 
 
 #define CHKPW_PG_QUERY \
