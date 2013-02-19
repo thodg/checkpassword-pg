@@ -1,15 +1,6 @@
 
-##  settings
+.include "conf-openbsd.mk"
 
-prefix = /usr/local
-
-CC = gcc
-INSTALL = install
-DEBUG_CFLAGS = -O0 -ggdb
-RELEASE_CFLAGS = -O2 -g
-CFLAGS += -W -Wall -Werror -ansi -pedantic ${DEBUG_CFLAGS}
-CPPFLAGS += -I${prefix}/include/postgresql83
-LDFLAGS += -L${prefix}/lib/postgresql83
 LIBS = -lpq
 
 HEADERS = \
@@ -27,7 +18,7 @@ all: checkpassword-pg
 ##  install
 
 install: checkpassword-pg
-	${INSTALL} -m 0755 $< ${prefix}/bin
+	${INSTALL} -m 0755 checkpassword-pg ${PREFIX}/bin
 
 ##  dist
 
