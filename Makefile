@@ -11,6 +11,9 @@ SOURCES = \
 	checkpassword_pg.c \
 	cli.c
 
+DISTFILES = ${HEADERS} ${SOURCES} \
+	Makefile conf-linux.mk conf-openbsd.mk
+
 OBJECTS = ${SOURCES:.c=.o}
 
 all: checkpassword-pg
@@ -22,19 +25,26 @@ install: checkpassword-pg
 
 ##  dist
 
-VERSION = 0.1
-DIST = checkpassword_pg-$(VERSION)
-dist:
-	svn export . ${DIST}
-	tar czf ${DIST}.tar.gz ${DIST}
+DISTNAME = checkpassword-pg
+VERSION = 0.2
+DIST = ${DISTNAME}-$(VERSION)
+dist: ${DIST}.tar.gz
+
+${DIST}.tar.gz: ${DISTFILES}
+	mkdir ${DIST}
+	ln ${DISTFILES} ${DIST}
+	tar czf ${DIST}.tar.gz.tmp ${DIST}
 	rm -rf ${DIST}
+	mv ${DIST}.tar.gz.tmp ${DIST}.tar.gz
+
+lowh-dist: ${DIST}.tar.gz
+	rsync -tv --ignore-existing ${DIST}.tar.gz lowh-dist@lowh.net:dist/LowH/${DISTNAME}/
 
 ##  clean
 
-CLEANFILES = *.o checkpassword-pg
-CLEANFILES_ = $(wildcard ${CLEANFILES})
+CLEANFILES = *.o ${DISTNAME} ${DIST}.tar.gz.tmp ${DIST}
 clean:
-	test -z "${CLEANFILES_}" || rm -f ${CLEANFILES}
+	rm -rf ${CLEANFILES}
 
 ##  build
 
