@@ -1,5 +1,5 @@
 
-PREFIX = /usr/local
+PREFIX ?= /usr/local
 
 INSTALL = install
 DEBUG_CFLAGS = -O0 -ggdb -DDEBUG

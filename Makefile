@@ -38,7 +38,7 @@ ${DIST}.tar.gz: ${DISTFILES}
 	mv ${DIST}.tar.gz.tmp ${DIST}.tar.gz
 
 lowh-dist: ${DIST}.tar.gz
-	rsync -tv --ignore-existing ${DIST}.tar.gz lowh-dist@lowh.net:dist/LowH/${DISTNAME}/
+	scp ${DIST}.tar.gz lowh-dist@lowh.net:dist/LowH/${DISTNAME}/
 
 ##  clean
 
