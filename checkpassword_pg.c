@@ -1,10 +1,23 @@
 /*
-  checkpassword-pg  -  checkpassword with postgresql backend
-  copyright 2008 Thomas de Grivel
 
-  checkpassword_pg.c  -  core function
+  checkpassword-pg  -  checkpassword with postgresql backend
+
+  Copyright 2008-2013 Thomas de Grivel
+
+  Permission to use, copy, modify, and distribute this software for any
+  purpose with or without fee is hereby granted, provided that the above
+  copyright notice and this permission notice appear in all copies.
+
+  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+  ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 */
+
 #include <stdlib.h>
 #include <syslog.h>
 #include <unistd.h>
@@ -16,7 +29,7 @@
 static void run_prog (char * const prog[])
 {
   execve (prog[0], prog, NULL);
-  syslog (LOG_ERR, "execve failed\n");  
+  syslog (LOG_ERR, "execve failed");
   exit (111);
 }
 
@@ -29,11 +42,11 @@ int checkpassword_pg (const char *login,
   PGconn        *conn;
   PGresult      *result;
   const char    *params[3];
+  int           n;
 
-  conn = PQconnectdb (CHKPW_PG_CONNINFO);
+  conn = PQconnectdb (conf_pg_connect);
   if (!conn || PQstatus(conn) != CONNECTION_OK) {
-    syslog (LOG_ERR, "PQconnectdb(\"%s\") failed (%p)\n",
-	    CHKPW_PG_CONNINFO, (void*) conn);
+    syslog (LOG_ERR, "connect failed");
     PQfinish (conn);
     exit (111);
   }
@@ -41,24 +54,24 @@ int checkpassword_pg (const char *login,
   params[0] = login;
   params[1] = pass;
   params[2] = time;
-  result = PQexecParams (conn, CHKPW_PG_QUERY, 2, NULL, params, NULL, NULL, 0);
+  result = PQexecParams (conn, conf_pg_query, 2, NULL, params, NULL, NULL, 0);
   if (PQresultStatus (result) != PGRES_TUPLES_OK) {
     syslog (LOG_ERR, "PQexecParams(\"%s\", \"%s\", \"%s\", \"%s\") failed: %s",
-	    CHKPW_PG_QUERY, login, pass, time, PQresultErrorMessage (result));
+	    conf_pg_query, login, pass, time, PQresultErrorMessage (result));
     PQfinish (conn);
     exit (111);
   }
 
-  switch (PQntuples (result)) {
+  n = PQntuples (result);
+  PQfinish (conn);
+
+  switch (n) {
   case 0:
-    PQfinish (conn);
     exit (1);
   case 1:
-    PQfinish (conn);
     run_prog (prog);
   default:
-    PQfinish (conn);
-    syslog (LOG_WARNING, "result has %i tuples", PQntuples (result));
+    syslog (LOG_WARNING, "result has %i tuples", n);
     exit (111);
   }
   return 0;

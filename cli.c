@@ -1,16 +1,31 @@
 /*
+
   checkpassword-pg  -  checkpassword with postgresql backend
-  copyright 2008 Thomas de Grivel
+
+  Copyright 2008-2013 Thomas de Grivel
+
+  Permission to use, copy, modify, and distribute this software for any
+  purpose with or without fee is hereby granted, provided that the above
+  copyright notice and this permission notice appear in all copies.
+
+  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+  ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
   cli.c  -  command line interface
-
   See http://cr.yp.to/checkpwd/ for interface description
+
 */
+
 #include <stdlib.h>
 #include <syslog.h>
 #include <unistd.h>
 #include "checkpassword_pg.h"
-
+#include "config.h"
 
 /* returns new value of i, or call exit with code 2 on overflow */
 static int find_zero (int i, const char *data)
@@ -70,6 +85,8 @@ int main (int argc, char **argv)
     syslog (LOG_ERR, "no program to run");
     return 2;
   }
+
+  load_config();
 
   argv[0] = argv[1];
   return checkpassword_pg (login, pass, time, argv);
