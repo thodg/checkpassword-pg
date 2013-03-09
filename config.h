@@ -28,10 +28,16 @@
 
 extern char *conf_pg_connect;
 
+# ifndef  CHKPW_PG_QUERY_HASH
+#  define CHKPW_PG_QUERY_HASH "substring(password FROM '\\$2a\\$.+$')"
+# endif
+
 # ifndef  CHKPW_PG_QUERY
-#  define CHKPW_PG_QUERY ("SELECT id FROM mailboxes"			\
-			  " WHERE username||'@'||domain = $1"		\
-			  "   AND password = crypt($2, password) LIMIT 1")
+#  define CHKPW_PG_QUERY \
+  ("SELECT id FROM mailboxes"						\
+   " WHERE username||'@'||domain = $1"					\
+   " AND " CHKPW_PG_QUERY_HASH " = crypt($2, " CHKPW_PG_QUERY_HASH ")"	\
+   " LIMIT 1")
 # endif
 
 extern char *conf_pg_query;
