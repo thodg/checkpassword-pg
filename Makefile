@@ -44,7 +44,7 @@ install: checkpassword-pg
 ##  dist
 
 DISTNAME = checkpassword-pg
-VERSION = 0.3
+VERSION = 0.4
 DIST = ${DISTNAME}-$(VERSION)
 dist: ${DIST}.tar.gz
 
