@@ -77,4 +77,6 @@ void load_config ()
   }
   load_config_file(path, n, "connect", &conf_pg_connect);
   load_config_file(path, n, "query", &conf_pg_query);
+  syslog(LOG_DEBUG, "conf_pg_connect: %s", conf_pg_connect);
+  syslog(LOG_DEBUG, "conf_pg_query: %s", conf_pg_query);
 }

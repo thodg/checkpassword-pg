@@ -69,6 +69,8 @@ int main (int argc, char **argv)
   int i;
 
   openlog ("checkpassword-pg", 0, LOG_AUTHPRIV);
+  setlogmask(LOG_UPTO(LOG_INFO));
+
   read_data (data);
 
   login = data;
