@@ -68,7 +68,7 @@ int main (int argc, char **argv)
   const char *time;
   int i;
 
-  openlog ("checkpassword-pg", 0, LOG_AUTH);
+  openlog ("checkpassword-pg", 0, LOG_AUTHPRIV);
   read_data (data);
 
   login = data;
