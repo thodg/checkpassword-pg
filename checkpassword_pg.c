@@ -47,7 +47,8 @@ int checkpassword_pg (const char *login,
   conn = PQconnectdb (conf_pg_connect);
   if (!conn || PQstatus(conn) != CONNECTION_OK) {
     syslog (LOG_ERR, "connect failed");
-    PQfinish (conn);
+    if (conn)
+      PQfinish (conn);
     exit (111);
   }
 
